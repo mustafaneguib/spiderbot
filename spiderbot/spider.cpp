@@ -110,7 +110,7 @@ int main()
 	 * in the queue after converting and formatting them into absolute urls.
 	 * */
 	
-	node=new Node(1,"http://www.google.com/");
+	node=new Node(1,"http://worldofpakistan.net/");
 	queue->enqueue(node);
 	int i=1;
 	while(!queue->isEmpty())
@@ -463,6 +463,13 @@ void getLinks(string content,string currentURL)
 	Node * nodeLink;
 	Queue * links=new Queue();//this stores the links
 	
+	/**
+	 * Addition in Version 0.1
+	 * i am setting the value "null" so that i can check if the base tag exists in the code or not
+	 * */
+	 
+	string baseTagURL="null";
+	
 	while(i<length)
 	{//run from start to the end of the string
 	//	cout<<endl<<state<<"-->";
@@ -490,10 +497,21 @@ void getLinks(string content,string currentURL)
 			case 1:
 			
 			if(content[i]=='a' || content[i]=='A')
-			{
+			{//start of the <a tag
 				state=2;
 			}//end if
-			
+			else if(content[i]=='b' || content[i]=='B')
+			{//start of the <base tag
+				
+				/**
+				 * Addition in Version 0.1
+				 * I am adding the tree for the base tag. States starting from 57 till 72 belong
+				 * to the tree for the base tag which tells what the base url of the web page retrieved is.
+				 * */
+				
+				state=57;
+				
+			}//end else if			
 			else
 			{
 				state=0;
@@ -1462,6 +1480,253 @@ void getLinks(string content,string currentURL)
 			
 			break;
 				
+			case 57:
+				cout<<content[i]<<endl;
+			if(content[i]=='a' || content[i]=='A')
+			{
+				state=58;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+			
+			case 58:
+			
+			if(content[i]=='s' || content[i]=='S')
+			{
+				state=59;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+			
+			case 59:
+			
+			if(content[i]=='e' || content[i]=='E')
+			{
+				state= 60;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+			
+			case 60:
+			
+			
+			if(content[i]==' ')
+			{
+				state= 61;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			
+			break;
+			
+			case 61:
+			
+			if(content[i]==' ')
+			{
+				state=61;
+			}//end if
+			else if(content[i]=='h' || content[i]=='H')
+			{
+				state= 62;
+			}//end else if
+			else
+			{
+				state=0;
+			}//end else
+						
+			
+			break;
+			
+			
+			case 62:
+			
+			if(content[i]=='r' || content[i]=='R')
+			{
+				state= 63;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			
+			break;
+			
+			
+			case 63:
+			
+			if(content[i]=='e' || content[i]=='E')
+			{
+				state= 64;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+				
+			
+			case 64:
+			
+			if(content[i]=='f' || content[i]=='F')
+			{
+				state= 65;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			
+			break;
+				
+			
+			case 65:
+			
+			
+			if(content[i]==' ')
+			{
+				state= 66;
+			}//end if
+			else if(content[i]=='=')
+			{
+				state=67;
+			}//end else if
+			else
+			{
+				state=0;
+			}//end else
+			
+			
+			break;
+		
+		
+			case 66:
+			
+			if(content[i]==' ')
+			{
+				state= 66;
+			}//end if
+			else if(content[i]=='=')
+			{
+				state=67;
+			}//end else if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+			
+			
+			case 67:
+			
+			
+			if(content[i]==' ')
+			{
+				state= 68;
+			}//end if
+			else if(content[i]=='\'' || content[i]=='"')
+			{
+				state=69;
+			}//end else if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+		
+				
+			case 68:
+			
+			
+			if(content[i]==' ')
+			{
+				state= 68;
+			}//end if
+			else if(content[i]=='\'' || content[i]=='"')
+			{
+				state=69;
+			}//end else if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+				
+				
+			case 69:
+			
+			
+			if(content[i]==' ')
+			{
+				state= 69;
+			}//end if
+			else
+			{
+				baseTagURL.clear();
+				baseTagURL.append(1,content[i]);
+				state=70;
+			}//end else
+			
+			
+			break;
+			
+			
+			case 70:
+			
+			
+			if(content[i]==' ')
+			{
+				state= 69;
+			}//end if
+			else if(content[i]=='\'' || content[i]=='"')
+			{
+				state=71;
+			}//end else if
+			else
+			{
+				
+				baseTagURL.append(1,content[i]);
+				state=70;
+			}//end else
+			
+			break;
+				
+				
+			case 71:
+			
+			if(content[i]==' ')
+			{
+				state= 71;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+				
+				
+				
 			default: 
 			
 			
@@ -1473,7 +1738,9 @@ void getLinks(string content,string currentURL)
 		
 		
 		//cout<<" "<<content[i]<<" -->"<<state<<endl;
+		//cout<<"baseUrl: "<<baseURL<<endl;
 		//cout<<endl<<link<<" -->"<<state<<endl;
+		//cout<<"state: "<<state<<endl;
 		
 		
 		i++;
@@ -1484,7 +1751,23 @@ void getLinks(string content,string currentURL)
 
 	string base,formattedLink;
 	//cout<<"current url before base: "<<currentURL<<endl;
-	base=getBase(currentURL);
+	
+	/**
+	 * Addition in Version 0.1
+	 * i am checking if the base tag was found or not. if it was found then use the
+	 * link as the currentURL
+	 * */
+	 
+	
+	if(baseTagURL.compare("null")==0)
+	{//no base tag was found in the code
+		base=getBase(currentURL);
+	}//end if
+	else
+	{
+		base=getBase(baseTagURL);
+	}//end else
+
 	//cout<<endl<<"base: "<<base<<endl;
 
 	
