@@ -35,5 +35,35 @@ Operating System: Ubuntu 11.04 Desktop
 Programming Language: C/C++
 Compiler: g++
 
+Installation & Running
+
+It is extremely easy to install and run. Run the searchspider.sh shell script as follows in the terminal:
+
+$ ./searchspider.sh
+
+This will compile and execute the app.
+
+Note that you need the latest version of g++ before you can compile and run the app. 
+
+Following are the features that have been planned for SpiderBot. We will be marking their status by the side of the feature.
+
+Features List:
+
+(1) Connecting to server and retrieving of HTML code for parsing (Done)
+(2) Extraction of links (Done)
+(3) Queue for visited and not visited links (Done)
+(4) Base tag (<base....>) implemented (Done)
+(5) Checking the connectivity of the server and disconnecting from a connected server gracefully which has no more content to offer (Done)
+(6) Extraction of the data within the div tag (<div...></div>)
+(7) Extraction of the data within title tag (<title>...</title>)
+(8) Checking for the robots.txt file and making SpiderBot polite 
+(7) Design of a repository
+(8) Optimization of memory being used
+(9) Designing of a distributed SpiderBot system (with distributed spiders and repository) to be scalable and failproof
+
+I will be updating this list as the features are completed and i will also be adding new items to the list as i come up with more ideas.
+Dont forget to fork the project and provide us with some cool new features and we might even add them to the project if they are good enough.
+
+
 
 
