@@ -123,7 +123,9 @@ int main()
 	 * in the queue after converting and formatting them into absolute urls.
 	 * */
 	
-	node=new Node(1,"http://worldofpakistan.net/");
+	
+//	http://seeker.dice.com/jobsearch/servlet/JobSearch?caller=0&amp;source=76&amp;LOCATION_OPTION=2&amp;EXTRA_STUFF=0&amp;N=0&amp;Hf=0&amp;Ntk=JobSearchRanking&amp;op=300&amp;values=&amp;FREE_TEXT=&amp;Ntx=mode+matchall&amp;EXCLUDE_KEY1=p_JobTitle&amp;EXCLUDE_TEXT1=&amp;EXCLUDE_KEY2=p_JobTitle&amp;EXCLUDE_TEXT2=&amp;EXCLUDE_KEY3=p_JobTitle&amp;EXCLUDE_TEXT3=&amp;EXCLUDE_KEY4=p_JobTitle&amp;EXCLUDE_TEXT4=&amp;EXCLUDE_KEY5=p_JobTitle&amp;EXCLUDE_TEXT5=&amp;EXCLUDE_KEY6=p_JobTitle&amp;EXCLUDE_TEXT6=&amp;EXCLUDE_KEY7=p_JobTitle&amp;EXCLUDE_TEXT7=&amp;EXCLUDE_KEY8=p_JobTitle&amp;EXCLUDE_TEXT8=&amp;locationRadio=on&amp;RADIUS=64.37376&amp;WHERE=&amp;COUNTRY=1525&amp;STAT_PROV=0&amp;METRO_AREA=33.78715899%2C-84.39164034&amp;AREA_CODES=&amp;AC_COUNTRY=1525&amp;TRAVEL=0&amp;TAXTERM=0&amp;SORTSPEC=0&amp;FRMT=0&amp;DAYSBACK=30&amp;NUM_PER_PAGE=30&amp;source_page=pg_project
+	node=new Node(1,"http://www.manageability.org/blog/stuff/open-source-web-crawlers-java");
 	queue->enqueue(node);
 	int i=1;
 	while(!queue->isEmpty())
@@ -327,24 +329,54 @@ serv_addr.sin_addr.s_addr = inet_addr(address);//i am converting back to the net
 	//i have to send the request to the server first of what i want
 	/**
 	 * Added in Version 0.0
-	 * I am sending the HTTP/1.1 commands to teh server
+	 * I am sending the HTTP/1.1 commands to the server
 	 * 
 	 * */
 	  
 	//char *data="GET / HTTP/1.1\nHost:www.mntechsolutions.net\n\n"; //i have to send all the messages as one message
-	char data[1000]="GET ";
+	//char data[1000]="GET ";
+	string data="GET ";
+	char *charArrayData;//this array will be used to send data to the server
+	
+	/**
+	 * Change in Version 0.1
+	 * I have changed the char arrays containing the HTTP request to c++ string because some data might get lost.
+	 */ 
+	data.append(fileName);
+		
+	data.append(" HTTP/1.1\nHost:");
 
-	strcat(data,fileName);
-	strcat(data," HTTP/1.1\nHost:");
-
-	strcat(data,domainName);//i am appending the domain name
-	strcat(data,"\nConnection: close\nCache-Control: max-age=0.0\nUser-Agent: SpiderBotV1.0\nAccept: link/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,image/gif,image/jpeg,image/jpg\nAccept-Language: en-US,en;q=0.8\nAccept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3\nContent-Transfer-Encoding: base64\n\n");//i am appending the new lines. the command has to end with two new lines \n\n
+	data.append(domainName);//i am appending the domain name
+	
+	/**
+	 * Change in Version 0.1
+	 * I have changed the User-Agent from SpiderBotV0.1 to SpiderBot.
+	 * This is the header request which tells the server who the client is.
+	 * i have made this change because the char arrays were limited in size, though string datatype
+	 * also has a limit but. Initially i had the problem of the buffer overflow error as i was using 
+	 * the function strcpy function which is insecure if the string is written into the memory
+	 * exceeding the allowed size. Furthermore there might have been a problem if i would have gotten an
+	 * extremely long string for the HTTP request, then the arrays would have lost the complete string.
+	 * Furthermore using the string datatype is alot more easier than using just character arrays.	 * 
+	 */
+	
+	data.append("\nConnection: close\nCache-Control: max-age=0.0\nUser-Agent: SpiderBot\nAccept: link/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8,image/gif,image/jpeg,image/jpg\nAccept-Language: en-US,en;q=0.8\nAccept-Charset: ISO-8859-1,utf-8;q=0.7,*;q=0.3\nContent-Transfer-Encoding: base64\n\n");//i am appending the new lines. the command has to end with two new lines \n\n
 
 	//Mozilla/5.0 (X11; Linux i686) AppleWebKit/534.30 (KHTML, like Gecko) Ubuntu/10.10 Chromium/12.0.742.91 Chrome/12.0.742.91 Safari/534.30
 
 	int x=0;
 	//if((x=send(s_id,data,1000,0))==-1)
-	if(send(s_id,data,1000,0)==-1)
+	
+	/**
+	 *Change in Version 0.1 
+	 * i am converting from string to char array so that i can send to the server using
+	 * the send function.
+	 */
+	 
+	charArrayData=new char [data.size()+1];
+	strcpy (charArrayData, data.c_str());
+
+	if(send(s_id,charArrayData,data.size()+1,0)==-1)
 	{//if no data has been sent then return an error
 		//perror("send");
 		//exit(1);
