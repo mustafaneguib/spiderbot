@@ -49,7 +49,7 @@ using namespace std;
  * 
  * SpiderBot
  * Mustafa Neguib
- * Version 0.1
+ * Version 0.2
  *  
  * */
  
@@ -65,6 +65,14 @@ using namespace std;
  */
  
  
+ /**
+  * Changes in Verison 0.2
+  * 
+  * I have fixed a major bug in the getBase function, but i have to perform more tests to be sure that no such bug appears in the function.
+  * Furthermore, i have changed the versioning scheme. Now every push of the code will be a new version such as the curent version is 0.2.
+  * The code of the next version will be Version 0.3 , no matter whether new features have been added or bugs have been fixed.
+  * 
+  */ 
  
  
  
@@ -122,10 +130,8 @@ int main()
 	 * As i will extract more links from the anchor tags in the HTML pages i will be placing them
 	 * in the queue after converting and formatting them into absolute urls.
 	 * */
-	
-	
-//	http://seeker.dice.com/jobsearch/servlet/JobSearch?caller=0&amp;source=76&amp;LOCATION_OPTION=2&amp;EXTRA_STUFF=0&amp;N=0&amp;Hf=0&amp;Ntk=JobSearchRanking&amp;op=300&amp;values=&amp;FREE_TEXT=&amp;Ntx=mode+matchall&amp;EXCLUDE_KEY1=p_JobTitle&amp;EXCLUDE_TEXT1=&amp;EXCLUDE_KEY2=p_JobTitle&amp;EXCLUDE_TEXT2=&amp;EXCLUDE_KEY3=p_JobTitle&amp;EXCLUDE_TEXT3=&amp;EXCLUDE_KEY4=p_JobTitle&amp;EXCLUDE_TEXT4=&amp;EXCLUDE_KEY5=p_JobTitle&amp;EXCLUDE_TEXT5=&amp;EXCLUDE_KEY6=p_JobTitle&amp;EXCLUDE_TEXT6=&amp;EXCLUDE_KEY7=p_JobTitle&amp;EXCLUDE_TEXT7=&amp;EXCLUDE_KEY8=p_JobTitle&amp;EXCLUDE_TEXT8=&amp;locationRadio=on&amp;RADIUS=64.37376&amp;WHERE=&amp;COUNTRY=1525&amp;STAT_PROV=0&amp;METRO_AREA=33.78715899%2C-84.39164034&amp;AREA_CODES=&amp;AC_COUNTRY=1525&amp;TRAVEL=0&amp;TAXTERM=0&amp;SORTSPEC=0&amp;FRMT=0&amp;DAYSBACK=30&amp;NUM_PER_PAGE=30&amp;source_page=pg_project
-	node=new Node(1,"http://www.manageability.org/blog/stuff/open-source-web-crawlers-java");
+
+	node=new Node(1,"http://www.worldofpakistan.net/");
 	queue->enqueue(node);
 	int i=1;
 	while(!queue->isEmpty())
@@ -167,8 +173,9 @@ int main()
 		//cout<<endl<<i<<endl;
 		i++;
 	
-	    cout<<"Num of nodes: "<<queue->getNumOfNodes()<<endl;//get the number of nodes currently enqueued in the current queue
-		
+	    cout<<"Num of nodes in the current queue: "<<queue->getNumOfNodes()<<endl;//get the number of nodes currently enqueued in the current queue
+		cout<<"Num of nodes in the crawled queue: "<<crawledQueue->getNumOfNodes()<<endl;//get the number of nodes currently enqueued in the crawled queue
+
 	}//end while
 	
 	
@@ -2451,28 +2458,53 @@ char ** parseUrl(string url)
 string getBase(string url)
 {//this function gets the base from the link
 		
+		
+	/**
+	 * Changes in Version 0.2
+	 * 
+	 * I have fixed a bug that i had discovered while testing. I am calling this function to get the base part of the urls
+	 * and also when i get the base from the base tag. In the case of getting the base part from the urls i was getting
+	 * fully formed urls as i was converting them into proper format, but getting the base from the base tag has problems
+	 * because that is not what i have converted, that is what i am getting from the HTML code of the page. One such case
+	 * that occured was that in the base tag i had gotten then base as //www.example.com and there was no http: as you can see.
+	 * Before the fix was applied this function was looking for http. Since http was not found nothing was being returned due to which
+	 * i was getting a segmentation fault error as invalid memory was being accessed.
+	 * 
+	 * I have to do more tests to make sure that no more error will be generated.
+	 * 
+	 */
+	  
 	string base;
 	int length=url.size();
-	int pos=url.find_first_of("http");
-	pos=pos+6;
-		
-	int pos1=url.find_last_of("/");
+	int pos=url.find_first_of("//");
 	
-	if(pos==pos1)
-	{//no path is attached to the domain name
+	if(pos==-1)
+	{
 		base=url.substr(0,length);
-		
+
 	}//end if
-	else if(pos1>pos)
-	{//if the path name is attached to the domain name
-		 base=url.substr(0,pos1);
-	}//end else if
 	else
-	{//this case will never happen
+	{
+		pos=pos+1;
 		
+		int pos1=url.find_last_of("/");
+		
+		if(pos==pos1)
+		{//no path is attached to the domain name
+			base=url.substr(0,length);
+			
+		}//end if
+		else if(pos1>pos)
+		{//if the path name is attached to the domain name
+			 base=url.substr(0,pos1);
+		}//end else if
+		else
+		{//this case will never happen
+			base=url.substr(pos+1,length);
+
+		}//end else
 	}//end else
-	
-	
+		
 	
 	//cout<<pos<<endl;
 
