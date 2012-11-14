@@ -1,8 +1,8 @@
 /*
- *  
+ *
  *SpiderBot is a web crawler written in C/C++ using the Berkely Sockets and HTTP/1.1 Protocol
  *Copyright (C) 2012  Mustafa Neguib, MN Tech Solutions
- *  
+ *
  *This file is part of SpiderBot.
  *
  *SpiderBot is free software: you can redistribute it and/or modify
@@ -17,16 +17,16 @@
  *
  *You should have received a copy of the GNU General Public License
  *along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *You can contact the developer/company at the following:
  *
  *Phone: 00923224138957
  *Website: www.mntechsolutions.net
  *Email: support@mntechsolutions.net , mustafaneguib@mntechsolutions.net
  *
- * 
+ *
  * */
- 
+
 #ifndef Queue
 #include "Node.h"//include Node.h because i am using Node from Node.h
 #include <string>
@@ -35,7 +35,7 @@ using namespace std;
 
 
 class Queue{
-	
+
 private:
 
 int numOfNodes;
@@ -57,6 +57,12 @@ Node * ifLinkExists(string link);//if the link is in the queue then return the n
 Node * enqueue(Node * node);//add to the queue
 Node * dequeue();//remove from the queue
 
+/**
+* Addition in Version 0.3
+* I have added this new function which will clear the list
+*
+*/
+void clearList();
 
 };
 

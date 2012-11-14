@@ -1,8 +1,8 @@
 /*
- *  
+ *
  *SpiderBot is a web crawler written in C/C++ using the Berkely Sockets and HTTP/1.1 Protocol
  *Copyright (C) 2012  Mustafa Neguib, MN Tech Solutions
- *  
+ *
  *This file is part of SpiderBot.
  *
  *SpiderBot is free software: you can redistribute it and/or modify
@@ -17,16 +17,16 @@
  *
  *You should have received a copy of the GNU General Public License
  *along with this program.  If not, see <http://www.gnu.org/licenses/>.
- * 
+ *
  *You can contact the developer/company at the following:
  *
  *Phone: 00923224138957
  *Website: www.mntechsolutions.net
  *Email: support@mntechsolutions.net , mustafaneguib@mntechsolutions.net
  *
- * 
+ *
  * */
- 
+
 #include "Queue.h"
 #include <string>
 #include <iostream>
@@ -35,7 +35,7 @@ using namespace std;
 
 Queue::Queue()
 {
-	
+
 	this->numOfNodes=0;
 	this->head=0;
 	this->last=0;
@@ -48,7 +48,7 @@ Queue::Queue(int numOfNodes)
 		this->numOfNodes=numOfNodes;
 		this->head=0;
 		this->last=0;
-	
+
 }
 
 void Queue::setNumOfNodes(int num)
@@ -58,13 +58,13 @@ void Queue::setNumOfNodes(int num)
 
 void Queue::setHead(Node * node)
 {
-	
+
 		this->head=node;
 }
 
 void Queue::setLast(Node * node)
 {
-	
+
 		this->last=node;
 }
 
@@ -76,14 +76,14 @@ int Queue::getNumOfNodes()
 Node * Queue::getHead()
 {
 	return this->head;
-	
-	
+
+
 }
 
 Node * Queue::getLast()
 {
 	return this->last;
-	
+
 }
 
 bool Queue::isEmpty()
@@ -91,13 +91,13 @@ bool Queue::isEmpty()
 	if((this->numOfNodes)<=0)
 	{//the queue is empty
 		return true;
-		
+
 	}//end if
 	else
 	{//the queue is not empty
 		return false;
 	}//end else
-	
+
 }
 
 
@@ -105,32 +105,32 @@ Node * Queue::ifLinkExists(string link)
 {
 
 	Node * ptr=this->getHead();
-	
+
 	while(ptr!=0)
 	{
 		if(ptr->getLink()==link)
 		{
-			
+
 			break;
 		}//end if
-		
+
 		ptr=ptr->getNext();
-		
+
 	}//end while
-	
+
 	return ptr;//if the ptr is 0 then the link does not exist in the enqueue, else it does
-	
-	
-	
+
+
+
 }
 
 
 Node *  Queue::enqueue(Node * node)
 {
-	
+
 	if(this->isEmpty())
 	{//the queue is empty
-	
+
 		this->setHead(node);
 		this->setLast(node);
 	}//end if
@@ -142,36 +142,53 @@ Node *  Queue::enqueue(Node * node)
 	}//end else
 
 	this->setNumOfNodes((this->getNumOfNodes())+1);
-	
+
 }
 
 Node *  Queue::dequeue()
 {
-	
+
 	Node *node=this->getHead();//node is pointing to the head
-	
+
 	if(node!=this->getLast())
 	{//more than one nodes are left. the head and last are pointing to different nodes
-		
+
 		this->setHead(node->getNext());
 		node->setNext(0);
-		
-	
+
+
 	}//end if
 	else
 	{//only one node is left. both the head and last will point to 0. the head and last are pointing to the same node.
 		this->setHead(node->getNext());
 		this->setLast(node->getNext());
-		
+
 	}//end else
-	
+
 	this->setNumOfNodes((this->getNumOfNodes())-1);
-	
+
 	return node;
 }
 
+/**
+* Addition in Version 0.3
+* I have added this new function which will clear the list
+*
+*/
+
+void Queue::clearList()
+{
 
 
+    while(!this->isEmpty())
+    {
+
+        this->dequeue();
+
+
+    }//end while
+
+}
 
 
 
