@@ -24,7 +24,7 @@ Phone: 00923224138957
 Website: www.mntechsolutions.net
 Email: support@mntechsolutions.net , mustafaneguib@mntechsolutions.net
 
-Current Version: 0.3
+Current Version: 0.4
 
 Following are the details of the platform on which SpiderBot is being developed and tested on:
 
@@ -54,14 +54,18 @@ Features List:
 (3) Queue for visited and not visited links (Done)
 (4) Base tag (<base....>) implemented (Done)
 (5) Checking the connectivity of the server and disconnecting from a connected server gracefully which has no more content to offer (Done)
-(6) Extraction of the data within the div tag (<div...></div>) (Done)
-(7) Extraction of the data within title tag (<title>...</title>)
+(6) Extraction of the data within the div tag (<div...>....</div>) (Done)
+(7) Extraction of the data within title tag (<title>...</title>) (Done)
 (8) Checking for the robots.txt file and making SpiderBot polite 
 (7) Design of a repository
 (8) Optimization of memory being used
 (9) Designing of a distributed SpiderBot system (with distributed spiders and repository) to be scalable and failproof
-(10) Extraction of the data within the p tag (<p...></p>) (Done)
+(10) Extraction of the data within the p tag (<p...>....</p>) (Done)
 (11) Design and development of a pipelining scheme for the spider
+(12) Extraction of the data within the b tag (<b...>....</b>) (Done)
+(13) Extraction of the data within the b tag (<i...>....</i>) (Done)
+(14) Extraction of the data within the b tag (<u...>....</u>) (Done)
+
 
 I will be updating this list as the features are completed and i will also be adding new items to the list as i come up with more ideas.
 Dont forget to fork the project and provide us with some cool new features and we might even add them to the project if they are good enough.

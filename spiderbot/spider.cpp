@@ -49,7 +49,7 @@ using namespace std;
  *
  * SpiderBot
  * Mustafa Neguib
- * Version 0.3
+ * Version 0.4
  *
  * */
 
@@ -93,7 +93,13 @@ using namespace std;
 
 
 string getPage(char domainName[100],char fileName[100]);//this function gets the HTML content from the server and returns the content as a string
-void getLinks(string content,string currentURL);//this parses the HTML page and gets all the links
+/**
+ * Change in Version 0.4
+ * I have renamed the function getLinks to getTargetData as i am now also extracting textual 
+ * data in addition to links.
+ * 
+ */ 
+void getTargetData(string content,string currentURL);//this parses the HTML page and gets all the target data from the page
 string formatLink(string link,string base);//this formats the link into an absolute link. the input link may be absolute or relative.
 char ** parseUrl(string url);//this parses the absolute link and returns an array of strings which contains the domain and file name
 string getBase(string url);//this gets the base of the absolute url
@@ -149,7 +155,7 @@ int main()
 	 * */
 
 /******************************************************************/
-
+//http://localhost/wwwbackup/testing/test.php
 	node=new Node(1,"http://www.worldofpakistan.net/","");
 	queue->enqueue(node);
 	int i=1;
@@ -178,7 +184,7 @@ int main()
 
 			if(content.compare("--1ERROR")!=0)
 			{//if the page was retrieved successfully then look for the data of interest (what we want)
-				getLinks(content,absoluteUrl);//extract the anchor tags and save them into to the current queue where the links will wait to be parsed
+				getTargetData(content,absoluteUrl);//extract the anchor tags and save them into to the current queue where the links will wait to be parsed
 
 			}//end if
 			else
@@ -516,7 +522,7 @@ return content;
 
 
 
-void getLinks(string content,string currentURL)
+void getTargetData(string content,string currentURL)
 {
 	
 	/**
@@ -603,6 +609,27 @@ void getLinks(string content,string currentURL)
 			    state=77;
 
 			}//end else if
+			
+			/**
+			 * Addition in Version 0.4
+			 * I have added the tree for the underline (<u...>...</u>)
+			 * bold (<b....>...</b>), italic (<i...>....</i>), and title
+			 * (<title>...</title>) tags
+			 * 
+			 */ 
+			
+			else if(content[i]=='u' || content[i]=='U')
+			{//start of the underline tag
+				state=77;
+			}//end else if
+			else if(content[i]=='i' || content[i]=='I')
+			{//start of the italic tag
+				state=77;
+			}//end else if
+			else if(content[i]=='t' || content[i]=='T')
+			{//start of the title tag
+				state=79;
+			}//end else if			
 			else
 			{
 				state=0;
@@ -1960,6 +1987,110 @@ void getLinks(string content,string currentURL)
             break;
 
 
+			case 79:
+			
+			if(content[i]=='i' || content[i]=='I')
+			{
+				state=80;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+			
+			case 80:
+			
+			if(content[i]=='t' || content[i]=='T')
+			{
+				state=81;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+			
+			case 81:
+			
+			if(content[i]=='l' || content[i]=='L')
+			{
+				state=82;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+
+			break;
+
+
+			case 82:
+			
+			if(content[i]=='e' || content[i]=='E')
+			{
+				state=83;
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+
+
+			case 83:
+			
+			if(content[i]=='>')
+			{
+				state=84;
+				
+			}//end if
+			else
+			{
+				state=0;
+			}//end else
+			
+			break;
+			
+			
+			case 84:
+			
+			
+			if(content[i]==' ')
+			{
+				
+				nodeDivText=new Node(1,"",divText);
+                textDivList->enqueue(nodeDivText);
+                divText.clear();
+                state=78;
+				
+				
+			}//end if
+			else if(content[i]=='<')
+			{
+				nodeDivText=new Node(1,"",divText);
+                textDivList->enqueue(nodeDivText);
+                divText.clear();
+
+                state=1;
+                
+			}//end else if
+			else
+			{
+				
+                divText.append(1,content[i]);
+
+				state=84;
+			}//end else
+			
+			
+			
+			break;
+			
+			
 
 			default:
 
@@ -1989,8 +2120,8 @@ void getLinks(string content,string currentURL)
     cout<<"Number of divText:"<<textDivList->getNumOfNodes()<<endl;
     textDivList->clearList();
     cout<<"Number of divText:"<<textDivList->getNumOfNodes()<<endl;
-/*
-    while(!textDivList->isEmpty())
+
+   /* while(!textDivList->isEmpty())
     {
         node=(textDivList->dequeue());
         cout<<(node->getText())<<endl;
